@@ -28,14 +28,14 @@
 
 首次启动后，点击菜单栏图标，选择 "打开设置..." (或按 `Cmd+,`)：
 
-| 平台 | API Key 格式 | 获取地址 |
-|------|-------------|----------|
-| Anthropic | `sk-ant-xxx` | [Anthropic Console](https://console.anthropic.com/) |
-| OpenRouter | `sk-or-xxx` | [OpenRouter Keys](https://openrouter.ai/keys) |
-| SiliconFlow | - | [SiliconFlow](https://cloud.siliconflow.cn/) |
-| 火山引擎 | - | [火山引擎](https://www.volcengine.com/) |
-| Z.ai | - | [Z.ai](https://z.ai/) |
-| 智谱AI | - | [智谱开放平台](https://open.bigmodel.cn/) |
+| 平台        | API Key 格式 | 获取地址                                            |
+| ----------- | ------------ | --------------------------------------------------- |
+| Anthropic   | `sk-ant-xxx` | [Anthropic Console](https://console.anthropic.com/) |
+| OpenRouter  | `sk-or-xxx`  | [OpenRouter Keys](https://openrouter.ai/keys)       |
+| SiliconFlow | -            | [SiliconFlow](https://cloud.siliconflow.cn/)        |
+| 火山引擎    | -            | [火山引擎](https://www.volcengine.com/)             |
+| Z.ai        | -            | [Z.ai](https://z.ai/)                               |
+| 智谱AI      | -            | [智谱开放平台](https://open.bigmodel.cn/)           |
 
 ### 2. 切换模型
 
@@ -44,6 +44,7 @@
 ### 3. 自定义模型
 
 在设置页面的 "自定义模型" 标签页中：
+
 - **添加**: 点击"添加模型"按钮，填写模型 ID、显示名称、平台等信息
 - **编辑**: 点击模型行右侧的编辑图标
 - **删除**: 点击模型行右侧的删除图标
@@ -132,110 +133,24 @@ zip -r ClaudeModelSwitcher.zip ClaudeModelSwitcher.app
 无签名应用首次打开会提示"无法验证开发者"，可通过以下方式允许运行：
 
 **方法一：右键打开（推荐）**
+
 1. 右键点击 `ClaudeModelSwitcher.app`
 2. 选择"打开"
 3. 弹出对话框点击"打开"确认
 
 **方法二：系统设置允许**
+
 1. 双击打开应用，会提示安全警告
 2. 打开"系统设置" > "隐私与安全性"
 3. 在底部点击"仍要打开"，输入密码确认
 
 **方法三：命令行移除隔离属性**
+
 ```bash
 xattr -cr /Applications/ClaudeModelSwitcher.app
 ```
 
 > 以上操作只需执行一次，之后可正常双击打开。
-
-### 方式二：签名 + 公证（推荐）
-
-适用于公开分发，用户无需额外操作即可直接运行。
-
-#### 1. 准备开发者证书
-
-确保你有 Apple Developer 账号，并在 Xcode 中登录：
-
-```bash
-# 查看可用的签名证书
-security find-identity -v -p codesigning
-```
-
-#### 2. 配置 Xcode 项目签名
-
-在 Xcode 中：
-1. 选择项目 > ClaudeModelSwitcher target
-2. Signing & Capabilities 标签页
-3. 勾选 "Automatically manage signing"
-4. 选择你的 Team
-
-或通过命令行配置：
-
-```bash
-# 设置签名证书（替换为你的证书 ID）
-CERTIFICATE_ID="Developer ID Application: Your Name (XXXXXXXXXX)"
-
-# 或使用 Team ID
-TEAM_ID="XXXXXXXXXX"
-```
-
-#### 3. 构建并签名
-
-```bash
-# 定义变量
-APP_NAME="ClaudeModelSwitcher"
-BUNDLE_ID="com.yourname.ClaudeModelSwitcher"
-CERTIFICATE="Developer ID Application: Your Name (XXXXXXXXXX)"
-
-# Release 构建
-xcodebuild -project ${APP_NAME}.xcodeproj \
-  -scheme ${APP_NAME} \
-  -configuration Release \
-  -derivedDataPath build \
-  CODE_SIGN_IDENTITY="${CERTIFICATE}" \
-  clean build
-
-# 验证签名
-codesign --verify --deep --strict --verbose=2 build/Build/Products/Release/${APP_NAME}.app
-```
-
-#### 4. 创建 DMG（可选但推荐）
-
-```bash
-# 创建临时 DMG 文件夹
-mkdir -p dmg_temp
-cp -r build/Build/Products/Release/${APP_NAME}.app dmg_temp/
-
-# 创建 DMG
-hdiutil create -volname "${APP_NAME}" \
-  -srcfolder dmg_temp \
-  -ov -format UDZO \
-  ${APP_NAME}.dmg
-
-# 清理
-rm -rf dmg_temp
-```
-
-#### 5. 公证（Notarization）
-
-```bash
-# 提交公证（需要 App-specific password）
-xcrun notarytool submit ${APP_NAME}.dmg \
-  --apple-id "your@email.com" \
-  --password "xxxx-xxxx-xxxx-xxxx" \
-  --team-id "XXXXXXXXXX" \
-  --wait
-
-# 公证成功后，Staple 证书
-xcrun stapler staple ${APP_NAME}.dmg
-
-# 验证
-spctl --assess --verbose --type open --context context:primary-signature ${APP_NAME}.dmg
-```
-
-#### 6. 分发
-
-将公证后的 DMG 或 zip 文件上传到 GitHub Releases 或其他分发渠道。
 
 ### 快速打包脚本
 
@@ -274,6 +189,7 @@ echo "✅ Build complete: ${OUTPUT_DIR}/${APP_NAME}-v${VERSION}.zip"
 ```
 
 运行：
+
 ```bash
 chmod +x build-release.sh
 ./build-release.sh
