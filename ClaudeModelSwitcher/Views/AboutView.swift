@@ -41,11 +41,11 @@ struct AboutView: View {
 
             // 底部信息
             VStack(spacing: 8) {
-                Text("Made with ❤️ by Simon")
+                Text("Made with ❤️ by 老王")
                     .font(.caption)
                     .foregroundColor(.secondary)
 
-                Link("GitHub", destination: URL(string: "https://github.com")!)
+                Link("GitHub", destination: URL(string: "https://github.com/wzxm")!)
                     .font(.caption)
             }
             .padding(.bottom)
