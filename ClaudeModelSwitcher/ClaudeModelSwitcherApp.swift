@@ -59,6 +59,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // 订阅 ClaudeCodeService 的版本更新状态变化，老王专门加的
         setupClaudeCodeObserver()
+
+        // 初始化快捷键服务，老王专门加的
+        HotkeyService.shared.start()
+
+        // 监听打开设置窗口的请求
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleOpenSettingsRequest),
+            name: .openSettingsRequested,
+            object: nil
+        )
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -389,6 +400,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     /// 自定义模型变化时刷新菜单
     @objc private func handleCustomModelsChange() {
         updateMenu()
+    }
+
+    /// 响应快捷键打开设置窗口的请求，老王专门加的
+    @objc private func handleOpenSettingsRequest() {
+        openSettings()
     }
 
     private func updateMenu() {

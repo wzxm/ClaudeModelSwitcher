@@ -129,7 +129,7 @@ struct ProviderDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("API Key")
                 .font(.headline)
-            
+
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     if showApiKey {
@@ -139,7 +139,7 @@ struct ProviderDetailView: View {
                         SecureField("输入 API Key", text: apiKeyBinding)
                             .textFieldStyle(.plain)
                     }
-                    
+
                     Button {
                         showApiKey.toggle()
                     } label: {
@@ -155,14 +155,26 @@ struct ProviderDetailView: View {
                     RoundedRectangle(cornerRadius: 6)
                         .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
                 )
-                
-                HStack(spacing: 6) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
-                        .font(.caption)
-                    Text("已保存 API Key (留空使用已保存的密钥)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+
+                // 显示已保存的 API Key（脱敏），老王专门加的安全功能
+                if let currentKey = currentApiKey, !currentKey.isEmpty {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.green)
+                            .font(.caption)
+                        Text("已保存: \(KeychainService.maskedApiKey(currentKey))")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                } else {
+                    HStack(spacing: 6) {
+                        Image(systemName: "exclamationmark.circle.fill")
+                            .foregroundStyle(.orange)
+                            .font(.caption)
+                        Text("未设置 API Key")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
             .padding(16)
@@ -197,6 +209,12 @@ struct ProviderDetailView: View {
     private var apiKeyBinding: Binding<String> {
         guard let platform = page.platform else { return .constant("") }
         return viewModel.apiKeyBinding(for: platform)
+    }
+
+    /// 当前已保存的 API Key（用于脱敏显示）
+    private var currentApiKey: String? {
+        guard let platform = page.platform else { return nil }
+        return AppConfig.shared.apiKey(for: platform)
     }
 }
 

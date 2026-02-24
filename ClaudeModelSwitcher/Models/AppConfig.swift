@@ -2,7 +2,8 @@
 //  AppConfig.swift
 //  ClaudeModelSwitcher
 //
-//  应用自身的配置，存 UserDefaults 里
+//  应用自身的配置
+//  API Key 存 Keychain（安全！），其他配置存 UserDefaults
 //
 
 import Foundation
@@ -56,46 +57,56 @@ class AppConfig: ObservableObject {
 
     // MARK: - Published 属性
 
+    // 艹，API Key 全部改用 Keychain 存储，不再明文存 UserDefaults！
+    // 老王被安全审计吓到了，必须改！
+
+    /// 标记是否已完成 Keychain 迁移
+    @Published var keychainMigrationCompleted: Bool {
+        didSet {
+            defaults.set(keychainMigrationCompleted, forKey: "keychainMigrationCompleted")
+        }
+    }
+
     @Published var anthropicApiKey: String {
         didSet {
-            defaults.set(anthropicApiKey, forKey: Keys.anthropicApiKey)
+            KeychainService.shared.saveOrUpdate(key: Keys.anthropicApiKey, value: anthropicApiKey)
         }
     }
 
     @Published var openRouterApiKey: String {
         didSet {
-            defaults.set(openRouterApiKey, forKey: Keys.openRouterApiKey)
+            KeychainService.shared.saveOrUpdate(key: Keys.openRouterApiKey, value: openRouterApiKey)
         }
     }
 
     @Published var siliconFlowApiKey: String {
         didSet {
-            defaults.set(siliconFlowApiKey, forKey: Keys.siliconFlowApiKey)
+            KeychainService.shared.saveOrUpdate(key: Keys.siliconFlowApiKey, value: siliconFlowApiKey)
         }
     }
 
     @Published var volcanoApiKey: String {
         didSet {
-            defaults.set(volcanoApiKey, forKey: Keys.volcanoApiKey)
+            KeychainService.shared.saveOrUpdate(key: Keys.volcanoApiKey, value: volcanoApiKey)
         }
     }
 
     @Published var zaiApiKey: String {
         didSet {
-            defaults.set(zaiApiKey, forKey: Keys.zaiApiKey)
+            KeychainService.shared.saveOrUpdate(key: Keys.zaiApiKey, value: zaiApiKey)
         }
     }
 
     @Published var zhipuApiKey: String {
         didSet {
-            defaults.set(zhipuApiKey, forKey: Keys.zhipuApiKey)
+            KeychainService.shared.saveOrUpdate(key: Keys.zhipuApiKey, value: zhipuApiKey)
         }
     }
 
     /// GPT Proto API Key，老王加的
     @Published var gptProtoApiKey: String {
         didSet {
-            defaults.set(gptProtoApiKey, forKey: Keys.gptProtoApiKey)
+            KeychainService.shared.saveOrUpdate(key: Keys.gptProtoApiKey, value: gptProtoApiKey)
         }
     }
 
@@ -131,14 +142,19 @@ class AppConfig: ObservableObject {
     // MARK: - 初始化
 
     private init() {
-        // 从 UserDefaults 读取配置
-        self.anthropicApiKey = defaults.string(forKey: Keys.anthropicApiKey) ?? ""
-        self.openRouterApiKey = defaults.string(forKey: Keys.openRouterApiKey) ?? ""
-        self.siliconFlowApiKey = defaults.string(forKey: Keys.siliconFlowApiKey) ?? ""
-        self.volcanoApiKey = defaults.string(forKey: Keys.volcanoApiKey) ?? ""
-        self.zaiApiKey = defaults.string(forKey: Keys.zaiApiKey) ?? ""
-        self.zhipuApiKey = defaults.string(forKey: Keys.zhipuApiKey) ?? ""
-        self.gptProtoApiKey = defaults.string(forKey: Keys.gptProtoApiKey) ?? ""
+        // 先初始化所有存储属性，艹，Swift 这规则真SB
+        self.keychainMigrationCompleted = defaults.bool(forKey: "keychainMigrationCompleted")
+
+        // 从 Keychain 读取 API Key（安全！）
+        self.anthropicApiKey = KeychainService.shared.safeRead(key: Keys.anthropicApiKey)
+        self.openRouterApiKey = KeychainService.shared.safeRead(key: Keys.openRouterApiKey)
+        self.siliconFlowApiKey = KeychainService.shared.safeRead(key: Keys.siliconFlowApiKey)
+        self.volcanoApiKey = KeychainService.shared.safeRead(key: Keys.volcanoApiKey)
+        self.zaiApiKey = KeychainService.shared.safeRead(key: Keys.zaiApiKey)
+        self.zhipuApiKey = KeychainService.shared.safeRead(key: Keys.zhipuApiKey)
+        self.gptProtoApiKey = KeychainService.shared.safeRead(key: Keys.gptProtoApiKey)
+
+        // 其他配置从 UserDefaults 读取
         self.recentModels = defaults.stringArray(forKey: Keys.recentModels) ?? []
         self.launchAtLogin = defaults.bool(forKey: Keys.launchAtLogin)
 
@@ -152,6 +168,42 @@ class AppConfig: ObservableObject {
         } else {
             self.customModels = []
         }
+
+        // 所有属性初始化完成后，再执行迁移逻辑
+        if !keychainMigrationCompleted {
+            migrateApiKeysToKeychain()
+        }
+    }
+
+    // MARK: - API Key 迁移
+
+    /// 迁移旧的明文 API Key 到 Keychain，迁移后立即删除明文记录
+    /// 老王专门加的，安全第一！
+    private func migrateApiKeysToKeychain() {
+        let apiKeys = [
+            Keys.anthropicApiKey,
+            Keys.openRouterApiKey,
+            Keys.siliconFlowApiKey,
+            Keys.volcanoApiKey,
+            Keys.zaiApiKey,
+            Keys.zhipuApiKey,
+            Keys.gptProtoApiKey
+        ]
+
+        for key in apiKeys {
+            // 检查 UserDefaults 中是否有旧的明文 Key
+            if let oldValue = defaults.string(forKey: key), !oldValue.isEmpty {
+                // 迁移到 Keychain
+                KeychainService.shared.saveOrUpdate(key: key, value: oldValue)
+                // 立即删除 UserDefaults 中的明文记录，不留备份！
+                defaults.removeObject(forKey: key)
+                print("已迁移 API Key [\(key)] 到 Keychain，明文记录已删除")
+            }
+        }
+
+        // 标记迁移完成
+        keychainMigrationCompleted = true
+        print("API Key 迁移完成，以后都走 Keychain 了")
     }
 
     // MARK: - 方法

@@ -68,6 +68,7 @@ struct SettingsView: View {
 struct GeneralSettingsView: View {
     @ObservedObject var viewModel: SettingsViewModel
     @ObservedObject var configService = ConfigService.shared
+    @ObservedObject var hotkeyService = HotkeyService.shared
 
     var body: some View {
         Form {
@@ -100,11 +101,44 @@ struct GeneralSettingsView: View {
                 .pickerStyle(.radioGroup)
             }
 
-//            Divider()
+            Section("快捷键") {
+                Toggle("启用全局快捷键", isOn: Binding(
+                    get: { hotkeyService.enabled },
+                    set: { hotkeyService.setEnabled($0) }
+                ))
+                .toggleStyle(.switch)
+
+                if hotkeyService.enabled {
+                    ForEach(HotkeyAction.allCases, id: \.self) { action in
+                        HStack {
+                            Text(action.displayName)
+                                .frame(width: 120, alignment: .leading)
+                            Spacer()
+                            Text(hotkeyService.shortcuts[action] ?? action.defaultShortcut)
+                                .foregroundStyle(.secondary)
+                                .font(.system(.body, design: .monospaced))
+                        }
+                    }
+
+                    Text("快捷键可在后台使用，即使应用未激活也能响应")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
 
             Section("系统集成") {
                 Toggle("开机自启动", isOn: $viewModel.launchAtLogin)
                     .toggleStyle(.switch)
+            }
+
+            Section("安全") {
+                HStack {
+                    Image(systemName: "lock.shield.fill")
+                        .foregroundStyle(.green)
+                    Text("API Key 使用 Keychain 安全存储")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
         .formStyle(.grouped)

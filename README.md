@@ -5,6 +5,7 @@
 ## 功能特性
 
 - **快速切换**: 在菜单栏一键切换 Claude Code 使用的模型
+- **全局快捷键**: 支持配置全局热键，即使应用在后台也能极速呼出操作
 - **多平台支持**: 支持 6 个主流 AI 平台
   - **Anthropic 官方** - Claude 系列模型
   - **OpenRouter** - 多模型聚合平台
@@ -13,6 +14,7 @@
   - **Z.ai** - GLM 系列模型
   - **智谱AI** - 智谱 GLM 系列
 - **Key 管理**: 统一管理各平台的 API Key，切换模型时自动替换
+- **安全存储**: API Key 通过 macOS Keychain 安全加密存储，无明文泄露风险
 - **自定义模型**: 支持添加、编辑、删除自定义模型预设
 - **开机自启**: 支持随系统启动，随时待命
 
@@ -51,6 +53,13 @@
 
 自定义模型会同步出现在菜单栏的"自定义模型"子菜单中，方便快速切换。
 
+### 4. 快捷键与安全说明
+
+在设置的 "通用" 标签页中，您可以体验以下增强特性：
+
+- **全局快捷键**：启用并配置全局快捷键。即使应用在后台，也能通过快捷键疾速执行操作。
+- **安全保障**：您的 API Key 将自动迁移至 macOS 的 Keychain 进行本地级加密存储，原有的明文记录将在迁移后彻底销毁，确保您的密钥安全。
+
 ## 工作原理
 
 本应用通过修改 `~/.claude/settings.json` 文件来实现模型切换：
@@ -79,7 +88,7 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/yourusername/ClaudeModelSwitcher.git
+git clone https://github.com/wzxm/ClaudeModelSwitcher.git
 cd ClaudeModelSwitcher
 
 # 用 Xcode 打开
@@ -161,7 +170,7 @@ xattr -cr /Applications/ClaudeModelSwitcher.app
 set -e
 
 APP_NAME="ClaudeModelSwitcher"
-VERSION=$(defaults read $(pwd)/${APP_NAME}/Info.plist CFBundleShortVersionString 2>/dev/null || echo "1.0.0")
+VERSION=$(defaults read $(pwd)/${APP_NAME}/Info.plist CFBundleShortVersionString 2>/dev/null || echo "0.0.2")
 OUTPUT_DIR="release"
 
 echo "🔨 Building ${APP_NAME} v${VERSION}..."
@@ -228,4 +237,4 @@ MIT License
 
 ---
 
-Made with love
+Made with ❤️ by 老王 ([@wzxm](https://github.com/wzxm))
