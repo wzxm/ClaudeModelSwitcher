@@ -33,7 +33,6 @@
 		A1000025 /* MCPListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000026 /* MCPListView.swift */; };
 		A1000026 /* AddMCPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000027 /* AddMCPView.swift */; };
 		A1000027 /* MCPDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000028 /* MCPDetailView.swift */; };
-		A1000028 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000029 /* KeychainService.swift */; };
 		A1000029 /* HotkeyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HotkeyService.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,7 +64,6 @@
 		A2000026 /* MCPListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPListView.swift; sourceTree = "<group>"; };
 		A2000027 /* AddMCPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMCPView.swift; sourceTree = "<group>"; };
 		A2000028 /* MCPDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCPDetailView.swift; sourceTree = "<group>"; };
-		A2000029 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		A2000030 /* HotkeyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyService.swift; sourceTree = "<group>"; };
 		A3000001 /* ClaudeModelSwitcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClaudeModelSwitcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -130,7 +128,6 @@
 				A2000015 /* ClaudeCodeService.swift */,
 				A2000018 /* SkillService.swift */,
 				A2000025 /* MCPService.swift */,
-				A2000029 /* KeychainService.swift */,
 				A2000030 /* HotkeyService.swift */,
 			);
 			path = Services;
@@ -268,7 +265,6 @@
 				A1000025 /* MCPListView.swift in Sources */,
 				A1000026 /* AddMCPView.swift in Sources */,
 				A1000027 /* MCPDetailView.swift in Sources */,
-				A1000028 /* KeychainService.swift in Sources */,
 				A1000029 /* HotkeyService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

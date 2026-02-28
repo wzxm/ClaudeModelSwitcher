@@ -136,6 +136,7 @@ struct ModelListView: View {
     private func platformColor(for platform: ModelPlatform) -> Color {
         switch platform {
         case .anthropic: return .orange.opacity(0.2)
+        case .ccclub: return .mint.opacity(0.2)
         case .openrouter: return .blue.opacity(0.2)
         case .siliconflow: return .purple.opacity(0.2)
         case .volcano: return .red.opacity(0.2)

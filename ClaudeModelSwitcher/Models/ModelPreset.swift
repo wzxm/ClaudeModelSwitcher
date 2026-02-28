@@ -38,16 +38,22 @@ enum ModelPresets {
     /// Anthropic 官方模型
     static let anthropicModels: [ModelPreset] = [
         ModelPreset(
-            modelId: "claude-sonnet-4-20250514",
-            displayName: "Claude Sonnet 4",
+            modelId: "claude-opus-4-6",
+            displayName: "Claude Opus 4.6",
             platform: .anthropic,
-            description: "最新 Sonnet 4，性能均衡"
+            description: "最新最强 Opus 4.6，顶级智能"
         ),
         ModelPreset(
-            modelId: "claude-opus-4-20250514",
-            displayName: "Claude Opus 4",
+            modelId: "claude-sonnet-4-6",
+            displayName: "Claude Sonnet 4.6",
             platform: .anthropic,
-            description: "最强 Opus 4，高级推理"
+            description: "最新 Sonnet 4.6，性能均衡"
+        ),
+        ModelPreset(
+            modelId: "claude-haiku-4-5",
+            displayName: "Claude Haiku 4.5",
+            platform: .anthropic,
+            description: "最新 Haiku 4.5，快速响应"
         ),
         ModelPreset(
             modelId: "claude-3-5-sonnet-20241022",
@@ -55,11 +61,45 @@ enum ModelPresets {
             platform: .anthropic,
             description: "经典 3.5 Sonnet"
         ),
+    ]
+
+    /// CC Club 中转模型
+    static let ccClubModels: [ModelPreset] = [
         ModelPreset(
-            modelId: "claude-3-5-haiku-20241022",
-            displayName: "Claude 3.5 Haiku",
-            platform: .anthropic,
-            description: "轻量快速 Haiku"
+            modelId: "claude-opus-4-6",
+            displayName: "Claude Opus 4.6 (CC Club)",
+            platform: .ccclub,
+            description: "CC Club 中转 - 最新最强 Opus 4.6"
+        ),
+        ModelPreset(
+            modelId: "claude-sonnet-4-6",
+            displayName: "Claude Sonnet 4.6 (CC Club)",
+            platform: .ccclub,
+            description: "CC Club 中转 - 最新 Sonnet 4.6"
+        ),
+        ModelPreset(
+            modelId: "claude-sonnet-4-5-20250929",
+            displayName: "Claude Sonnet 4.5 (CC Club)",
+            platform: .ccclub,
+            description: "CC Club 中转 - Claude Sonnet 4.5"
+        ),
+        ModelPreset(
+            modelId: "gpt-5.2",
+            displayName: "GPT-5.2 (CC Club)",
+            platform: .ccclub,
+            description: "CC Club 中转 - OpenAI GPT-5.2"
+        ),
+        ModelPreset(
+            modelId: "o3",
+            displayName: "OpenAI o3 (CC Club)",
+            platform: .ccclub,
+            description: "CC Club 中转 - OpenAI o3 推理模型"
+        ),
+        ModelPreset(
+            modelId: "gemini-2.5-pro",
+            displayName: "Gemini 2.5 Pro (CC Club)",
+            platform: .ccclub,
+            description: "CC Club 中转 - Google Gemini 2.5 Pro"
         ),
     ]
 
@@ -203,37 +243,43 @@ enum ModelPresets {
             modelId: "claude-opus-4-6",
             displayName: "Claude Opus 4.6",
             platform: .gptproto,
-            description: "最新 Opus 4.6，性能均衡"
+            description: "最新最强 Opus 4.6"
         ),
         ModelPreset(
-            modelId: "claude-sonnet-4-5-20250929-thinking",
-            displayName: "Claude Sonnet 4.5",
+            modelId: "claude-sonnet-4-6",
+            displayName: "Claude Sonnet 4.6",
             platform: .gptproto,
-            description: "Claude Sonnet 4.5"
+            description: "最新 Sonnet 4.6"
         ),
         ModelPreset(
-            modelId: "gemini-3-pro-preview",
-            displayName: "Gemini 3 Pro Preview",
+            modelId: "gpt-5.2",
+            displayName: "GPT-5.2",
             platform: .gptproto,
-            description: "Gemini 3 Pro Preview"
+            description: "OpenAI GPT-5.2"
+        ),
+        ModelPreset(
+            modelId: "o3",
+            displayName: "OpenAI o3",
+            platform: .gptproto,
+            description: "OpenAI o3 推理模型"
+        ),
+        ModelPreset(
+            modelId: "gemini-2.5-pro",
+            displayName: "Gemini 2.5 Pro",
+            platform: .gptproto,
+            description: "Google Gemini 2.5 Pro"
         ),
         ModelPreset(
             modelId: "qwen-turbo",
             displayName: "Qwen Turbo",
             platform: .gptproto,
-            description: "Qwen Turbo"
-        ),
-        ModelPreset(
-            modelId: "grok-code-fast-1",
-            displayName: "Grok Code Fast 1",
-            platform: .gptproto,
-            description: "Grok Code Fast 1"
+            description: "阿里通义千问 Turbo"
         ),
     ]
 
     /// 获取所有预设模型（按平台分组）
     static var allPresets: [ModelPreset] {
-        anthropicModels + openRouterModels + siliconFlowModels + volcanoModels + zaiModels + zhipuModels + gptProtoModels
+        anthropicModels + ccClubModels + openRouterModels + siliconFlowModels + volcanoModels + zaiModels + zhipuModels + gptProtoModels
     }
 
     /// 获取指定平台的预设模型
@@ -241,6 +287,8 @@ enum ModelPresets {
         switch platform {
         case .anthropic:
             return anthropicModels
+        case .ccclub:
+            return ccClubModels
         case .openrouter:
             return openRouterModels
         case .siliconflow:

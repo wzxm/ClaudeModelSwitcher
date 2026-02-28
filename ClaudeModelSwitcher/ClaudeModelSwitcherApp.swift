@@ -213,6 +213,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // 2. 添加各平台子菜单
         addPlatformMenu(to: menu, platform: .anthropic, title: "Anthropic 官方")
+        addPlatformMenu(to: menu, platform: .ccclub, title: "CC Club")
         addPlatformMenu(to: menu, platform: .openrouter, title: "OpenRouter")
         addPlatformMenu(to: menu, platform: .siliconflow, title: "SiliconFlow")
         addPlatformMenu(to: menu, platform: .volcano, title: "火山引擎")

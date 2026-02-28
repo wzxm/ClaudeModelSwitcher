@@ -13,6 +13,7 @@ import SwiftUI
 class SettingsViewModel: ObservableObject {
     // 各平台 API Key
     @Published var anthropicApiKey: String = ""
+    @Published var ccClubApiKey: String = ""
     @Published var openRouterApiKey: String = ""
     @Published var siliconFlowApiKey: String = ""
     @Published var volcanoApiKey: String = ""
@@ -58,6 +59,7 @@ class SettingsViewModel: ObservableObject {
     /// 加载设置
     func loadSettings() {
         anthropicApiKey = appConfig.anthropicApiKey
+        ccClubApiKey = appConfig.ccClubApiKey
         openRouterApiKey = appConfig.openRouterApiKey
         siliconFlowApiKey = appConfig.siliconFlowApiKey
         volcanoApiKey = appConfig.volcanoApiKey
@@ -72,6 +74,7 @@ class SettingsViewModel: ObservableObject {
     /// 保存设置
     func saveSettings() {
         appConfig.anthropicApiKey = anthropicApiKey
+        appConfig.ccClubApiKey = ccClubApiKey
         appConfig.openRouterApiKey = openRouterApiKey
         appConfig.siliconFlowApiKey = siliconFlowApiKey
         appConfig.volcanoApiKey = volcanoApiKey
@@ -99,6 +102,11 @@ class SettingsViewModel: ObservableObject {
             return Binding(
                 get: { self.anthropicApiKey },
                 set: { self.anthropicApiKey = $0 }
+            )
+        case .ccclub:
+            return Binding(
+                get: { self.ccClubApiKey },
+                set: { self.ccClubApiKey = $0 }
             )
         case .openrouter:
             return Binding(
@@ -207,6 +215,8 @@ class SettingsViewModel: ObservableObject {
         switch platform {
         case .anthropic:
             return key.hasPrefix("sk-ant-")
+        case .ccclub:
+            return key.hasPrefix("cr_") || key.hasPrefix("sk-ant-")
         case .openrouter:
             return key.hasPrefix("sk-or-")
         case .siliconflow:
@@ -222,6 +232,7 @@ class SettingsViewModel: ObservableObject {
 /// 设置页面枚举 - 侧边栏导航
 enum SettingsPage: Hashable, Identifiable, CaseIterable {
     case anthropic
+    case ccclub
     case openrouter
     case siliconflow
     case volcano
@@ -238,6 +249,7 @@ enum SettingsPage: Hashable, Identifiable, CaseIterable {
     var platform: ModelPlatform? {
         switch self {
         case .anthropic: return .anthropic
+        case .ccclub: return .ccclub
         case .openrouter: return .openrouter
         case .siliconflow: return .siliconflow
         case .volcano: return .volcano
@@ -251,6 +263,7 @@ enum SettingsPage: Hashable, Identifiable, CaseIterable {
     var title: String {
         switch self {
         case .anthropic: return "Claude 官方"
+        case .ccclub: return "CC Club"
         case .openrouter: return "OpenRouter"
         case .siliconflow: return "SiliconFlow"
         case .volcano: return "火山引擎"
@@ -266,6 +279,7 @@ enum SettingsPage: Hashable, Identifiable, CaseIterable {
     var subtitle: String? {
         switch self {
         case .anthropic: return "Anthropic 官方 API"
+        case .ccclub: return "Claude Code Club 中转服务"
         case .openrouter: return "多模型聚合平台"
         case .siliconflow: return "DeepSeek 等国产模型"
         case .volcano: return "字节跳动豆包系列"
@@ -280,6 +294,7 @@ enum SettingsPage: Hashable, Identifiable, CaseIterable {
     var icon: String {
         switch self {
         case .anthropic: return "brain.head.profile"
+        case .ccclub: return "link.badge.plus"
         case .openrouter: return "arrow.triangle.branch"
         case .siliconflow: return "cpu"
         case .volcano: return "flame"
@@ -295,6 +310,7 @@ enum SettingsPage: Hashable, Identifiable, CaseIterable {
     var color: Color? {
         switch self {
         case .anthropic: return .orange
+        case .ccclub: return .mint
         case .openrouter: return .blue
         case .siliconflow: return .purple
         case .volcano: return .red

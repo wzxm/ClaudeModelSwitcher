@@ -162,7 +162,7 @@ struct ProviderDetailView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                             .font(.caption)
-                        Text("已保存: \(KeychainService.maskedApiKey(currentKey))")
+                        Text("已保存: \(maskedApiKey(currentKey))")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -215,6 +215,13 @@ struct ProviderDetailView: View {
     private var currentApiKey: String? {
         guard let platform = page.platform else { return nil }
         return AppConfig.shared.apiKey(for: platform)
+    }
+
+    private func maskedApiKey(_ key: String) -> String {
+        guard key.count > 8 else { return String(repeating: "•", count: key.count) }
+        let prefix = String(key.prefix(4))
+        let suffix = String(key.suffix(4))
+        return "\(prefix)••••••••\(suffix)"
     }
 }
 

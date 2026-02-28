@@ -20,7 +20,7 @@ struct SettingsView: View {
             // Sidebar
             List(selection: $selection) {
                 Section("平台") {
-                    ForEach([SettingsPage.anthropic, .openrouter, .siliconflow, .volcano, .zai, .zhipu, .gptproto], id: \.self) { page in
+                    ForEach([SettingsPage.anthropic, .ccclub, .openrouter, .siliconflow, .volcano, .zai, .zhipu, .gptproto], id: \.self) { page in
                         NavigationLink(value: page) {
                             Label(page.title, systemImage: page.icon)
                         }
@@ -45,7 +45,7 @@ struct SettingsView: View {
             // Detail View
             if let selection = selection {
                 switch selection {
-                case .anthropic, .openrouter, .siliconflow, .volcano, .zai, .zhipu, .gptproto:
+                case .anthropic, .ccclub, .openrouter, .siliconflow, .volcano, .zai, .zhipu, .gptproto:
                     ProviderDetailView(page: selection, viewModel: viewModel)
                 case .custom:
                     ModelListView(viewModel: viewModel)
@@ -135,7 +135,7 @@ struct GeneralSettingsView: View {
                 HStack {
                     Image(systemName: "lock.shield.fill")
                         .foregroundStyle(.green)
-                    Text("API Key 使用 Keychain 安全存储")
+                    Text("API Key 存储在本地应用配置中")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }

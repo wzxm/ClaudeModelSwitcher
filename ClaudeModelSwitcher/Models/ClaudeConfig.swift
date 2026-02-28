@@ -80,6 +80,7 @@ struct ClaudeConfig {
 /// 模型平台类型 - 老王精选的6个平台
 enum ModelPlatform: String, CaseIterable, Codable, Identifiable {
     case anthropic = "Anthropic"
+    case ccclub = "CC Club"
     case openrouter = "OpenRouter"
     case siliconflow = "SiliconFlow"
     case volcano = "Volcano"
@@ -94,6 +95,8 @@ enum ModelPlatform: String, CaseIterable, Codable, Identifiable {
         switch self {
         case .anthropic:
             return nil
+        case .ccclub:
+            return "https://claude-code.club/api"
         case .openrouter:
             return "https://openrouter.ai/api"
         case .siliconflow:
@@ -114,6 +117,8 @@ enum ModelPlatform: String, CaseIterable, Codable, Identifiable {
         switch self {
         case .anthropic:
             return "Anthropic 官方 API"
+        case .ccclub:
+            return "Claude Code Club 中转服务"
         case .openrouter:
             return "多模型聚合平台"
         case .siliconflow:
@@ -132,6 +137,7 @@ enum ModelPlatform: String, CaseIterable, Codable, Identifiable {
     /// 根据 baseUrl 判断当前平台
     static func detect(from url: String?) -> ModelPlatform {
         guard let url = url, !url.isEmpty else { return .anthropic }
+        if url.contains("claude-code.club") || url.contains("ai-code.club") { return .ccclub }
         if url.contains("openrouter") { return .openrouter }
         if url.contains("siliconflow") { return .siliconflow }
         if url.contains("volces") { return .volcano }
